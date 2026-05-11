@@ -28,9 +28,10 @@ class AppController extends AbstractController
     {
         $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
         $commands = json_decode(file_get_contents($jsonPath), true);
-        var_dump($commands);
 
-        return $this->render('base.html.twig');
+        return $this->render('bot-help.html.twig', [
+            'commands' => $commands
+        ]);
     }
 
     #[Route('/interactions', name: 'interactions', methods: ['POST'])]
