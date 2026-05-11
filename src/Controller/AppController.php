@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Service\PokemonManager;
 use Discord\Interaction;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -19,10 +22,22 @@ class AppController extends AbstractController
         return $this->redirect("https://discord.com/oauth2/authorize?client_id=$discordApplicationId");
     }
 
+    #[Route('/help', name: 'help')]
+    public function help(ParameterBagInterface $params): Response
+    {
+        $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
+        $commands = json_decode(file_get_contents($jsonPath), true);
+
+        return $this->render('bot-help.html.twig', [
+            'commands' => $commands
+        ]);
+    }
+
     #[Route('/interactions', name: 'interactions', methods: ['POST'])]
     public function handle(
         Request $request,
         HttpClientInterface $httpClient,
+        PokemonManager $pokemonManager
     ): JsonResponse {
         $signature = $request->headers->get('X-Signature-Ed25519');
         $timestamp = $request->headers->get('X-Signature-Timestamp');
@@ -55,6 +70,12 @@ class AppController extends AbstractController
             $discordId = $data['member']['user']['id'] ?? $data['user']['id'];
 
             $content = ['content' => "Commande inconnue."];
+
+            $content = match ($command) {
+                'pendu' => $pokemonManager->handleStartGame($discordId),
+                'deviner' => $pokemonManager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
+                default => ['content' => "Commande inconnue."]
+            };
 
             $url = "https://discord.com/api/v10/webhooks/{$appId}/{$token}/messages/@original";
             $httpClient->request('PATCH', $url, ['json' => $content]);

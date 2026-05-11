@@ -1,0 +1,18 @@
+<ul>
+    {% for command in commands %}
+        <li>
+            <strong>/{{ command.name }}</strong> : {{ command.description }}
+            {% if command.options is defined %}
+                <ul>
+                    {% for option in command.options %}
+                        <li>
+                            <em>Option : {{ option.name }}</em> 
+                            ({{ option.required ? 'Obligatoire' : 'Optionnel' }}) 
+                            - {{ option.description }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

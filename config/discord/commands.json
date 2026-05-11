@@ -1,0 +1,19 @@
+[
+    {
+        "name": "pendu",
+        "description": "Démarrer une nouvelle partie de pendu Pokémon"
+    },
+    {
+        "name": "deviner",
+        "description": "Proposer une lettre pour le pendu en cours",
+        "options": [
+            {
+                "name": "lettre",
+                "description": "La lettre à tester",
+                "type": 3,
+                "required": true,
+                "max_length": 1
+            }
+        ]
+    }
+]

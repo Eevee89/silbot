@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Repository;
 
 use PDOStatement;
 
 class DatabaseConnection
 {
-    private \PDO $pdo;
+    protected \PDO $pdo;
 
     public function __construct(?string $databaseName = null)
     {
