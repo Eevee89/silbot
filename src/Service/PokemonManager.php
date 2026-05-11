@@ -6,17 +6,17 @@ use App\Repository\PokemonRepository;
 
 class PokemonManager
 {
-    public function __construct(private PokemonRepository $manager) {}
+    public function __construct(private PokemonRepository $repository) {}
 
     public function handleStartGame(string $discordId): string
     {
         try {
-            $result = $this->manager->deleteGame($discordId);
+            $result = $this->repository->deleteGame($discordId);
             if (!$result) {
                 return "Impossible de supprimer l'ancienne partie.";
             }
 
-            $pokemon = $this->manager->getRandomPokemon($discordId);
+            $pokemon = $this->repository->getRandomPokemon($discordId);
 
             $content = "🎮 **Nouveau Pendu lancé !**\n";
             $content .= "Pokémon de la génération " . $pokemon['generation'] . ".\n` ";
@@ -32,7 +32,7 @@ class PokemonManager
     public function handleGuess(string $discordId, string $letter): string
     {
         try {
-            $game = $this->manager->getGame($discordId);
+            $game = $this->repository->getGame($discordId);
 
             $letter = strtoupper(trim($letter));
             if (strlen($letter) !== 1) {
@@ -45,13 +45,13 @@ class PokemonManager
             }
 
             $newLetters = $currentLetters . $letter;
-            $this->manager->setLetters($game['id'], $newLetters);;
+            $this->repository->setLetters($game['id'], $newLetters);;
 
             $name = strtoupper($game['pokemon_name']);
             $mask = $this->generateMask($name, $newLetters);
 
             if (!str_contains($mask, '_')) {
-                $this->manager->deleteGame($discordId);
+                $this->repository->deleteGame($discordId);
 
                 $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
                 return "✨ GAGNÉ ! C'était bien **[$name]($url)**";

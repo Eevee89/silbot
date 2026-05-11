@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\PokemonRepository;
 use App\Service\PokemonManager;
 use Discord\Interaction;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ class AppController extends AbstractController
     {
         $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
         $commands = json_decode(file_get_contents($jsonPath), true);
+        dd($commands);
 
         return $this->render('bot-help.html.twig', [
             'commands' => $commands
@@ -37,7 +39,6 @@ class AppController extends AbstractController
     public function handle(
         Request $request,
         HttpClientInterface $httpClient,
-        PokemonManager $pokemonManager
     ): JsonResponse {
         $signature = $request->headers->get('X-Signature-Ed25519');
         $timestamp = $request->headers->get('X-Signature-Timestamp');
@@ -71,9 +72,12 @@ class AppController extends AbstractController
 
             $content = ['content' => "Commande inconnue."];
 
+            $repository = new PokemonRepository();
+            $manager = new PokemonManager($repository);
+
             $content = match ($command) {
-                'pendu' => $pokemonManager->handleStartGame($discordId),
-                'deviner' => $pokemonManager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
+                'pendu' => $manager->handleStartGame($discordId),
+                'deviner' => $manager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
                 default => ['content' => "Commande inconnue."]
             };
 
