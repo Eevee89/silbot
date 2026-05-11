@@ -1,5 +1,8 @@
 [
     {
+        "name": "help",
+        "description": "Lister les commandes disponibles"
+    },{
         "name": "pendu",
         "description": "Démarrer une nouvelle partie de pendu Pokémon"
     },

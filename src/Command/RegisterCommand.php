@@ -26,8 +26,8 @@ class RegisterCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $discordApplicationId = $_ENV['DISCORD_APPLICATION_ID'] ?? '';
-        $discordBotToken = $_ENV['DISCORD_BOT_TOKEN'] ?? '';
+        $discordApplicationId = getenv('DISCORD_APPLICATION_ID');
+        $discordBotToken = getenv('DISCORD_BOT_TOKEN');
 
         if (!$discordApplicationId || !$discordBotToken) {
             $io->error('Les variables DISCORD_APPLICATION_ID ou DISCORD_BOT_TOKEN sont manquantes dans le .env');

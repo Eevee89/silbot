@@ -38,9 +38,10 @@ jobs:
             .env.test
             assets/
             **/var/**
- 
+
       - name: Register Discord Commands
         env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_APPLICATION_ID: ${{ secrets.DISCORD_ID }}
+          APP_ENV: prod
         run: php bin/console app:discord:register-commands
