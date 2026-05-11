@@ -28,7 +28,6 @@ class AppController extends AbstractController
     {
         $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
         $commands = json_decode(file_get_contents($jsonPath), true);
-        dd($commands);
 
         return $this->render('bot-help.html.twig', [
             'commands' => $commands
@@ -78,11 +77,13 @@ class AppController extends AbstractController
             $content = match ($command) {
                 'pendu' => $manager->handleStartGame($discordId),
                 'deviner' => $manager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
-                default => ['content' => "Commande inconnue."]
+                default => "Commande inconnue."
             };
 
             $url = "https://discord.com/api/v10/webhooks/{$appId}/{$token}/messages/@original";
-            $httpClient->request('PATCH', $url, ['json' => $content]);
+            $httpClient->request('PATCH', $url, ['json' => [
+                'content' => $content
+            ]]);
             exit;
         }
 
