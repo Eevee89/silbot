@@ -38,6 +38,7 @@ class AppController extends AbstractController
     public function handle(
         Request $request,
         HttpClientInterface $httpClient,
+        ParameterBagInterface $params
     ): JsonResponse {
         $signature = $request->headers->get('X-Signature-Ed25519');
         $timestamp = $request->headers->get('X-Signature-Timestamp');
@@ -58,6 +59,21 @@ class AppController extends AbstractController
         }
 
         if ($data['type'] === 2) {
+            $command = $data['data']['name'];
+            if ($command === 'help') {
+                $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
+                $commands = json_decode(file_get_contents($jsonPath), true);
+
+                return new JsonResponse(([
+                    'type' => 4,
+                    'data' => [
+                        'content' => $this->renderView('bot-help.html.twig', [
+                            'commands' => $commands
+                        ])
+                    ]
+                ]));
+            }
+
             $response = new JsonResponse(['type' => 5]);
             $response->send();
             if (function_exists('fastcgi_finish_request')) {
@@ -66,7 +82,6 @@ class AppController extends AbstractController
 
             $token = $data['token'];
             $appId = $data['application_id'];
-            $command = $data['data']['name'];
             $discordId = $data['member']['user']['id'] ?? $data['user']['id'];
 
             $content = ['content' => "Commande inconnue."];

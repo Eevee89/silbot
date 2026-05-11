@@ -1,0 +1,9 @@
+{% for command in commands %}
+**__{{ command.name }}__** : {{ command.description }}
+{% if command.options is defined %}
+{% for option in command.options %}
+> *{{ option.name }}* ({{ option.required ? 'Obligatoire' : 'Optionnel' }}) - {{ option.description }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
