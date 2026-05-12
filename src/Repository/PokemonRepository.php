@@ -20,7 +20,7 @@ class PokemonRepository extends DatabaseConnection
 
     public function getRandomPokemon(string $discordId, string $gens = ''): array
     {
-        $res = $this->prepare("SELECT id, name, generation FROM pokemon WHERE :gens = '' OR generations IN (:gens) ORDER BY RAND() LIMIT 1", [
+        $res = $this->prepare("SELECT id, name, generation FROM pokemon WHERE :gens = '' OR generation IN (:gens) ORDER BY RAND() LIMIT 1", [
             'gens' => $gens
         ]);
         $pokemon = $res->fetch();
