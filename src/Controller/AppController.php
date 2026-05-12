@@ -64,14 +64,14 @@ class AppController extends AbstractController
                 $jsonPath = $params->get('kernel.project_dir') . '/config/discord/commands.json';
                 $commands = json_decode(file_get_contents($jsonPath), true);
 
-                return new JsonResponse(([
+                return new JsonResponse([
                     'type' => 4,
                     'data' => [
-                        'content' => $this->renderView('bot-help.html.twig', [
+                        'content' => $this->renderView('bot-help-md.html.twig', [
                             'commands' => $commands
                         ])
                     ]
-                ]));
+                ]);
             }
 
             $response = new JsonResponse(['type' => 5]);
