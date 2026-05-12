@@ -4,7 +4,15 @@
         "description": "Lister les commandes disponibles"
     },{
         "name": "pendu",
-        "description": "Démarrer une nouvelle partie de pendu Pokémon"
+        "description": "Démarrer une nouvelle partie de pendu Pokémon",
+        "options": [
+            {
+                "name": "generations",
+                "description": "Pour plusieurs gens, séparer par une virgule !",
+                "type": 3,
+                "required": false
+            }
+        ]
     },
     {
         "name": "deviner",

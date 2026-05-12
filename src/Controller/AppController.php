@@ -90,7 +90,7 @@ class AppController extends AbstractController
             $manager = new PokemonManager($repository);
 
             $content = match ($command) {
-                'pendu' => $manager->handleStartGame($discordId),
+                'pendu' => $manager->handleStartGame($discordId, $data['data']['options'][0]['value'] ?? ''),
                 'deviner' => $manager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
                 default => "Commande inconnue."
             };

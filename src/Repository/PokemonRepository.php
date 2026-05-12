@@ -18,10 +18,12 @@ class PokemonRepository extends DatabaseConnection
         return !!$res;
     }
 
-    public function getRandomPokemon(string $discordId): array
+    public function getRandomPokemon(string $discordId, string $gens = ''): array
     {
-        $stmt = $this->pdo->query("SELECT id, name, generation FROM pokemon ORDER BY RAND() LIMIT 1");
-        $pokemon = $stmt->fetch();
+        $res = $this->prepare("SELECT id, name, generation FROM pokemon WHERE :gens = '' OR generations IN (:gens) ORDER BY RAND() LIMIT 1", [
+            'gens' => $gens
+        ]);
+        $pokemon = $res->fetch();
 
         if (!$pokemon) {
             throw new \Error("Aucun Pokémon trouvé dans la base.");

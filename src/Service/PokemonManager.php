@@ -8,7 +8,7 @@ class PokemonManager
 {
     public function __construct(private PokemonRepository $repository) {}
 
-    public function handleStartGame(string $discordId): string
+    public function handleStartGame(string $discordId, string $gens = ''): string
     {
         try {
             $result = $this->repository->deleteGame($discordId);
@@ -16,7 +16,8 @@ class PokemonManager
                 return "Impossible de supprimer l'ancienne partie.";
             }
 
-            $pokemon = $this->repository->getRandomPokemon($discordId);
+            $sanitizedGens = $gens ? $this->splitIntegers($gens) : [];
+            $pokemon = $this->repository->getRandomPokemon($discordId, implode(',', $sanitizedGens));
 
             $content = "🎮 **Nouveau Pendu lancé !**\n";
             $content .= "Pokémon de la génération " . $pokemon['generation'] . ".\n` ";
@@ -77,5 +78,25 @@ class PokemonManager
             }
         }
         return trim($result);
+    }
+
+    function splitIntegers(string $input): array
+    {
+        $trimmedInput = trim($input);
+
+        // Regex expliquée :
+        // ^\d+           : Commence par un ou plusieurs chiffres
+        // (              : Groupe répétable
+        //   \s*,\s* : Une virgule entourée d'espaces optionnels (\s*)
+        //   \d+          : Suivi d'un nombre
+        // )* : Le groupe peut se répéter 0 ou plusieurs fois
+        if (!preg_match('/^\d+(\s*,\s*\d+)*$/', $trimmedInput)) {
+            throw new \Error("Format invalide : seuls les entiers séparés par des virgules sont autorisés.");
+        }
+
+        $parts = explode(',', $trimmedInput);
+        return array_map(function ($value) {
+            return (int) trim($value);
+        }, $parts);
     }
 }
