@@ -89,9 +89,12 @@ class AppController extends AbstractController
             $repository = new PokemonRepository();
             $manager = new PokemonManager($repository);
 
+            $option = $data['data']['options'][0]['value'] ?? '';
+
             $content = match ($command) {
-                'game' => $manager->handleStartGame($discordId, $data['data']['options'][0]['value'] ?? ''),
-                'try-letter' => $manager->handleGuess($discordId, $data['data']['options'][0]['value'] ?? ''),
+                'game' => $manager->handleStartGame($discordId, $option),
+                'try-letter' => $manager->handleLetterGuess($discordId, $option),
+                'try-name' => $manager->handleNameGuess($discordId, $option),
                 default => "Commande inconnue."
             };
 

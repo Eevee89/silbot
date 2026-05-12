@@ -35,8 +35,7 @@
                 "name": "name",
                 "description": "Le nom à tester",
                 "type": 3,
-                "required": true,
-                "max_length": 1
+                "required": true
             }
         ]
     }

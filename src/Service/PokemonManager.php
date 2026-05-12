@@ -30,7 +30,7 @@ class PokemonManager
         }
     }
 
-    public function handleGuess(string $discordId, string $letter): string
+    public function handleLetterGuess(string $discordId, string $letter): string
     {
         try {
             $game = $this->repository->getGame($discordId);
@@ -59,6 +59,31 @@ class PokemonManager
             }
 
             return "Lettre : **$letter**\nMot : ` $mask `\nLettres jouées : $newLetters";
+        } catch (\Throwable $e) {
+            return ":warning: Erreur (Guess): " . str_replace("pokémon", "Pokémon", strtolower($e->getMessage()));
+        }
+    }
+
+    public function handleNameGuess(string $discordId, string $name): string
+    {
+        try {
+            $game = $this->repository->getGame($discordId);
+
+            $name = strtoupper(trim($name));
+            if (empty($name)) {
+                return "Envoie un nom !";
+            }
+
+            if (strtoupper($game['pokemon_name']) === $name) {
+                $this->repository->deleteGame($discordId);
+
+                $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
+                return "✨ GAGNÉ ! C'était bien **[$name]($url)**";
+            }
+
+            $currentLetters = strtoupper($game['letters'] ?? '');
+            $mask = $this->generateMask(strtoupper($game['pokemon_name']), $currentLetters);
+            return "Nom : **$name**\nMot : ` $mask `\nLettres jouées : $currentLetters";
         } catch (\Throwable $e) {
             return ":warning: Erreur (Guess): " . str_replace("pokémon", "Pokémon", strtolower($e->getMessage()));
         }
