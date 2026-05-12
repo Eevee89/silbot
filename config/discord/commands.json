@@ -3,7 +3,7 @@
         "name": "help",
         "description": "Lister les commandes disponibles"
     },{
-        "name": "pendu",
+        "name": "game",
         "description": "Démarrer une nouvelle partie de pendu Pokémon",
         "options": [
             {
@@ -15,12 +15,25 @@
         ]
     },
     {
-        "name": "deviner",
+        "name": "try-letter",
         "description": "Proposer une lettre pour le pendu en cours",
         "options": [
             {
-                "name": "lettre",
+                "name": "letter",
                 "description": "La lettre à tester",
+                "type": 3,
+                "required": true,
+                "max_length": 1
+            }
+        ]
+    },
+    {
+        "name": "try-name",
+        "description": "Proposer un nom complet pour le pendu en cours",
+        "options": [
+            {
+                "name": "name",
+                "description": "Le nom à tester",
                 "type": 3,
                 "required": true,
                 "max_length": 1
