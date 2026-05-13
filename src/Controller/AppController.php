@@ -83,18 +83,23 @@ class AppController extends AbstractController
             $token = $data['token'];
             $appId = $data['application_id'];
             $discordId = $data['member']['user']['id'] ?? $data['user']['id'];
+            $channelId = $data['channel_id'] ?? '';
 
             $content = ['content' => "Commande inconnue."];
 
             $repository = new PokemonRepository();
             $manager = new PokemonManager($repository);
 
-            $option = $data['data']['options'][0]['value'] ?? '';
+            $optionsData = $data['data']['options'] ?? [];
+            $options = [];
+            foreach ($optionsData as $option) {
+                $options[$option['name']] = $option['value'];
+            }
 
             $content = match ($command) {
-                'game' => $manager->handleStartGame($discordId, $option),
-                'try-letter' => $manager->handleLetterGuess($discordId, $option),
-                'try-name' => $manager->handleNameGuess($discordId, $option),
+                'game' => $manager->handleStartGame($discordId, $channelId, $options),
+                'try-letter' => $manager->handleLetterGuess($discordId, $channelId, $options),
+                'try-name' => $manager->handleNameGuess($discordId, $channelId, $options),
                 default => "Commande inconnue."
             };
 

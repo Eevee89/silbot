@@ -8,21 +8,35 @@ class PokemonManager
 {
     public function __construct(private PokemonRepository $repository) {}
 
-    public function handleStartGame(string $discordId, string $gens = ''): string
+    public function handleStartGame(string $discordId, string $channelId, array $options): string
     {
         try {
+            $gens = $options['generations'] ?? '';
+            $multiplayer = $options['multiplayer'] ?? false;
+
+            $game = $channelId ? $this->repository->getGame($channelId) : null;
+            if (!empty($game)) {
+                return "Une partie multijoueur est en cours sur ce salon.";
+            }
+
             $result = $this->repository->deleteGame($discordId);
             if (!$result) {
                 return "Impossible de supprimer l'ancienne partie.";
             }
+            $result = $this->repository->deleteGame($channelId);
+            if (!$result) {
+                return "Impossible de supprimer l'ancienne partie.";
+            }
+
+            $id = $multiplayer ? $channelId : $discordId;
 
             $sanitizedGens = $gens ? $this->splitIntegers($gens) : [];
-            $pokemon = $this->repository->getRandomPokemon($discordId, implode(',', $sanitizedGens));
+            $pokemon = $this->repository->getRandomPokemon($id, implode(',', $sanitizedGens));
 
             $content = "🎮 **Nouveau Pendu lancé !**\n";
             $content .= "Pokémon de la génération " . $pokemon['generation'] . ".\n` ";
             $content .= $this->generateMask($pokemon['name'], "") . " \n";
-            $content .= "`\nUtilise `/deviner [lettre]` !";
+            $content .= "`\nUtilise `/try-letter [lettre]` !";
 
             return $content;
         } catch (\Throwable $e) {
@@ -30,10 +44,16 @@ class PokemonManager
         }
     }
 
-    public function handleLetterGuess(string $discordId, string $letter): string
+    public function handleLetterGuess(string $discordId, string $channelId, array $options): string
     {
         try {
-            $game = $this->repository->getGame($discordId);
+            $multiplayer = true;
+            $game = $this->repository->getGame($channelId);
+            if (empty($game)) {
+                $multiplayer = false;
+                $game = $this->repository->getGame($discordId);
+            }
+            $letter = $options['letter'] ?? '';
 
             $letter = strtoupper(trim($letter));
             if (strlen($letter) !== 1) {
@@ -52,7 +72,7 @@ class PokemonManager
             $mask = $this->generateMask($name, $newLetters);
 
             if (!str_contains($mask, '_')) {
-                $this->repository->deleteGame($discordId);
+                $this->repository->deleteGame($multiplayer ? $channelId : $discordId);
 
                 $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
                 return "✨ GAGNÉ ! C'était bien **[$name]($url)**";
@@ -64,10 +84,16 @@ class PokemonManager
         }
     }
 
-    public function handleNameGuess(string $discordId, string $name): string
+    public function handleNameGuess(string $discordId, string $channelId, array $options): string
     {
         try {
-            $game = $this->repository->getGame($discordId);
+            $multiplayer = true;
+            $game = $this->repository->getGame($channelId);
+            if (empty($game)) {
+                $multiplayer = false;
+                $game = $this->repository->getGame($discordId);
+            }
+            $name = $options['name'] ?? '';
 
             $name = strtoupper(trim($name));
             if (empty($name)) {
@@ -75,7 +101,7 @@ class PokemonManager
             }
 
             if (strtoupper($game['pokemon_name']) === $name) {
-                $this->repository->deleteGame($discordId);
+                $this->repository->deleteGame($multiplayer ? $channelId : $discordId);
 
                 $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
                 return "✨ GAGNÉ ! C'était bien **[$name]($url)**";

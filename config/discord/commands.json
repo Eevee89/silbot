@@ -8,8 +8,14 @@
         "options": [
             {
                 "name": "generations",
-                "description": "Pour plusieurs gens, séparer par une virgule !",
+                "description": "Pour plusieurs gens, séparer par une virgule ! (0 pour toutes)",
                 "type": 3,
+                "required": false
+            },
+            {
+                "name": "multiplayer",
+                "description": "Pour jouer à plusieurs (monopolise le salon)",
+                "type": 5,
                 "required": false
             }
         ]
