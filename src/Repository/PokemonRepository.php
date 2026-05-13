@@ -43,7 +43,7 @@ class PokemonRepository extends DatabaseConnection
         return $pokemon;
     }
 
-    public function getGame(string $discordId): array
+    public function getGame(string $discordId): array|false
     {
         $sql = "SELECT g.*, p.name as pokemon_name, p.pokedex
             FROM hanging_game g 
