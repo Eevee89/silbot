@@ -29,7 +29,7 @@ class QuoteManager
             $cleanNewLine = str_replace("\n", "\n>", $quote['quote']);
 
             $content = ":speech_balloon: **Nouvelle citation :**\n\n";
-            $content .= str_replace([">-", "> -"], [">\-", "> \-"], $cleanNewLine);
+            $content .= "> " . str_replace([">-", "> -"], "> \-", $cleanNewLine);
 
             return $content;
         } catch (\Throwable $e) {
