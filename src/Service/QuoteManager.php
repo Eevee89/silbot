@@ -27,9 +27,10 @@ class QuoteManager
             $quote = $this->repository->getRandomQuote($discordId, $category, $type);
 
             $cleanNewLine = str_replace("\n", "\n>", $quote['quote']);
+            $lines = str_replace([">-", "> -"], "> \-", $cleanNewLine);
 
             $content = ":speech_balloon: **Nouvelle citation :**\n\n";
-            $content .= "> " . str_replace([">-", "> -"], "> \-", $cleanNewLine);
+            $content .= "> " . (str_contains($lines, "> \-") ? "\-" : "") . $lines;
 
             return $content;
         } catch (\Throwable $e) {
