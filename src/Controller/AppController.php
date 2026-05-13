@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\PokemonRepository;
 use App\Service\PokemonManager;
+use App\Service\QuoteManager;
 use Discord\Interaction;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -87,19 +87,20 @@ class AppController extends AbstractController
 
             $content = ['content' => "Commande inconnue."];
 
-            $repository = new PokemonRepository();
-            $manager = new PokemonManager($repository);
-
             $optionsData = $data['data']['options'] ?? [];
             $options = [];
             foreach ($optionsData as $option) {
                 $options[$option['name']] = $option['value'];
             }
 
+            $pokemonManager = new PokemonManager();
+            $quoteManager = new QuoteManager();
+
             $content = match ($command) {
-                'game' => $manager->handleStartGame($discordId, $channelId, $options),
-                'try-letter' => $manager->handleLetterGuess($discordId, $channelId, $options),
-                'try-name' => $manager->handleNameGuess($discordId, $channelId, $options),
+                'game' => $pokemonManager->handleStartGame($discordId, $channelId, $options),
+                'try-letter' => $pokemonManager->handleLetterGuess($discordId, $channelId, $options),
+                'try-name' => $pokemonManager->handleNameGuess($discordId, $channelId, $options),
+                'quote' => $quoteManager->handleStartGame($discordId, $options),
                 default => "Commande inconnue."
             };
 

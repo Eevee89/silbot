@@ -6,7 +6,12 @@ use App\Repository\PokemonRepository;
 
 class PokemonManager
 {
-    public function __construct(private PokemonRepository $repository) {}
+    private PokemonRepository $repository;
+
+    public function __construct() 
+    {
+        $this->repository = new PokemonRepository();
+    }
 
     public function handleStartGame(string $discordId, string $channelId, array $options): string
     {
