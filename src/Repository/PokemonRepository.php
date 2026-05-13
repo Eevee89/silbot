@@ -55,12 +55,7 @@ class PokemonRepository extends DatabaseConnection
             throw new \Error("Impossible de récupérer la partie.");
         }
 
-        $game = $result->fetch();
-        if (!is_array($game)) {
-            throw new \Error("Impossible de récupérer la partie.");
-        }
-
-        return $game;
+        return $result->fetch();
     }
 
     public function setLetters(int $gameId, string $letters): bool
