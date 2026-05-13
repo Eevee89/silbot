@@ -92,7 +92,7 @@ class PokemonManager
 
                 $pokedexUrl = "https://www.pokebip.com/pokedex/pokemon/" . strtolower($game['pokemon_name']);
                 $imgUrl = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
-                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n$imgUrl";
+                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n[_]($imgUrl)";
             }
 
             return "Lettre : **$letter**\nMot : ` $mask `\nLettres jouées : $newLetters";
@@ -129,7 +129,7 @@ class PokemonManager
 
                 $pokedexUrl = "https://www.pokebip.com/pokedex/pokemon/" . strtolower($game['pokemon_name']);
                 $imgUrl = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
-                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n$imgUrl";
+                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n[_]($imgUrl)";
             }
 
             $currentLetters = strtoupper($game['letters'] ?? '');
