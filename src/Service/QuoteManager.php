@@ -19,14 +19,6 @@ class QuoteManager
             $category = $options['category'] ?? 0;
             $type = $options['type'] ?? 0;
 
-            $game = $this->repository->getGame($discordId);
-            if (!empty($game)) {
-                $content = ":speech_balloon: **Citation :**\n\n";
-                $content .= "> " . $game['quote'];
-
-                return $content;
-            }
-
             $result = $this->repository->deleteQuote($discordId);
             if (!$result) {
                 return "Impossible de supprimer l'ancienne citation.";
