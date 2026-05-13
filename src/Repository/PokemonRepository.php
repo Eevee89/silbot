@@ -25,7 +25,7 @@ class PokemonRepository extends DatabaseConnection
         ]);
         $pokemon = $res->fetch();
 
-        if (!$pokemon) {
+        if (!is_array($pokemon)) {
             throw new \Error("Aucun Pokémon trouvé dans la base.");
         }
 
@@ -56,7 +56,7 @@ class PokemonRepository extends DatabaseConnection
         }
 
         $game = $result->fetch();
-        if (!$game) {
+        if (!is_array($game)) {
             throw new \Error("Impossible de récupérer la partie.");
         }
 
