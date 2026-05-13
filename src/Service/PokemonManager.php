@@ -90,8 +90,9 @@ class PokemonManager
             if (!str_contains($mask, '_')) {
                 $this->repository->deleteGame($multiplayer ? $channelId : $discordId);
 
-                $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
-                return "✨ GAGNÉ ! C'était bien **[$name]($url)**";
+                $pokedexUrl = "https://www.pokebip.com/pokedex/pokemon/" . strtolower($game['pokemon_name']);
+                $imgUrl = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
+                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n$imgUrl";
             }
 
             return "Lettre : **$letter**\nMot : ` $mask `\nLettres jouées : $newLetters";
@@ -126,8 +127,9 @@ class PokemonManager
             if (strtoupper($game['pokemon_name']) === $name) {
                 $this->repository->deleteGame($multiplayer ? $channelId : $discordId);
 
-                $url = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
-                return "✨ GAGNÉ ! C'était bien **[$name]($url)**";
+                $pokedexUrl = "https://www.pokebip.com/pokedex/pokemon/" . strtolower($game['pokemon_name']);
+                $imgUrl = "https://www.pokebip.com/pokedex-images/300/" . $game['pokedex'] . ".png?v=ev-blueberry";
+                return "✨ GAGNÉ ! C'était bien **[$name]($pokedexUrl)**\n$imgUrl";
             }
 
             $currentLetters = strtoupper($game['letters'] ?? '');
