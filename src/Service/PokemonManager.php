@@ -16,7 +16,15 @@ class PokemonManager
 
             $game = $channelId ? $this->repository->getGame($channelId) : null;
             if (!empty($game)) {
-                return "Une partie multijoueur est en cours sur ce salon.";
+                $currentLetters = strtoupper($game['letters'] ?? '');
+                $mask = $this->generateMask(strtoupper($game['pokemon_name']), $currentLetters);
+
+                $content = "Une partie multijoueur est en cours sur ce salon : \n\n";
+                $content .= "Pokémon de la génération " . $game['generation'] . ".\n` ";
+                $content .= $mask . " \n";
+                $content .= "`\nUtilise `/try-letter [lettre]` !";
+
+                return $content;
             }
 
             $result = $this->repository->deleteGame($discordId);
@@ -53,6 +61,14 @@ class PokemonManager
                 $multiplayer = false;
                 $game = $this->repository->getGame($discordId);
             }
+
+            if (empty($game)) {
+                $content = "Tu n'as pas de partie en cours.\n";
+                $content .= "`\nUtilise `/game (generations) (multiplayer)` !";
+
+                return $content;
+            }
+
             $letter = $options['letter'] ?? '';
 
             $letter = strtoupper(trim($letter));
@@ -92,6 +108,13 @@ class PokemonManager
             if (empty($game)) {
                 $multiplayer = false;
                 $game = $this->repository->getGame($discordId);
+            }
+
+            if (empty($game)) {
+                $content = "Tu n'as pas de partie en cours.\n";
+                $content .= "`\nUtilise `/game (generations) (multiplayer)` !";
+
+                return $content;
             }
             $name = $options['name'] ?? '';
 

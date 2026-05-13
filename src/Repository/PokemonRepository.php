@@ -45,7 +45,7 @@ class PokemonRepository extends DatabaseConnection
 
     public function getGame(string $discordId): array|false
     {
-        $sql = "SELECT g.*, p.name as pokemon_name, p.pokedex
+        $sql = "SELECT g.*, p.name as pokemon_name, p.pokedex, p.generation
             FROM hanging_game g 
             JOIN pokemon p ON g.pokemon_id = p.id 
             WHERE g.discord_id = :discordId";
