@@ -64,7 +64,7 @@ class PokemonManager
 
             if (empty($game)) {
                 $content = "Tu n'as pas de partie en cours.\n";
-                $content .= "`\nUtilise `/game (generations) (multiplayer)` !";
+                $content .= "\nUtilise `/game (generations) (multiplayer)` !";
 
                 return $content;
             }
@@ -112,7 +112,7 @@ class PokemonManager
 
             if (empty($game)) {
                 $content = "Tu n'as pas de partie en cours.\n";
-                $content .= "`\nUtilise `/game (generations) (multiplayer)` !";
+                $content .= "\nUtilise `/game (generations) (multiplayer)` !";
 
                 return $content;
             }
