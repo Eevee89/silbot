@@ -53,13 +53,41 @@
                 "name": "category",
                 "description": "La source de la citation",
                 "type": 4,
-                "required": false
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Film",
+                        "value": 1
+                    },
+                    {
+                        "name": "Série",
+                        "value": 2
+                    },
+                    {
+                        "name": "Animé",
+                        "value": 3
+                    },
+                    {
+                        "name": "Jeu Vidéo",
+                        "value": 4
+                    }
+                ]
             },
             {
                 "name": "type",
                 "description": "Le type de la citation",
                 "type": 4,
-                "required": false
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Qui a dit ? (Devine qui a dit la citation)",
+                        "value": 1
+                    },
+                    {
+                        "name": "Complète... (Complète la citation)",
+                        "value": 2
+                    }
+                ]
             }
         ]
     }
